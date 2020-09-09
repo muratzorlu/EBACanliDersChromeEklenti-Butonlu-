@@ -9,5 +9,5 @@ Kullanımı: Dosyaları indiriniz. Chrome ve Chromium tarayıcınızın menüler
 
 Diğer eklentiden farkı:
 
-- EBA/Canlı Dersler sayfasına gelecekdersler iin buton ekler ve buton tıklayıp gidebilme.
-- MiddleWare syfası aaçılırs buradan da Zoom açabilme.
+- EBA/Canlı Dersler sayfasında gelecek dersler için buton ekler ve butona tıklayıp derse gidebilme.
+- MiddleWare sayfası açılırsa buradan da Zoom açabilme.
