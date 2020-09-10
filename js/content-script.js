@@ -144,6 +144,57 @@ chrome.extension.onMessage.addListener(function(msg, sender, sendResponse) {
         
         
         
+      }else if(value.substring(0,10)=="etudDetail") 
+      {
+		  var id=getParameterByName('id');
+		  console.log(id);
+		  if(id.length>5)
+		  {
+        $.ajax({
+              url : "https://uygulama-ebaders.eba.gov.tr/ders/FrontEndService//livelesson/instudytime/start",
+              method : "POST",
+              headers : {
+                "Content-Type" : "application/x-www-form-urlencoded",
+                "Accept" : "json"
+              },
+              data : {
+				  "studytimeid" : id,
+				  "tokentype" : "asdasd"
+				},
+              withCredentials : true,
+              crossDomain : true,
+              xhrFields : {
+                withCredentials : true
+              },
+              dataType : "json",
+              success : function(resp) {
+				  console.log(resp);
+				  if(resp.success==true) 
+						  {
+                
+									var result = resp.meeting;
+									var txt=result.topic +" Canlı Dersini Zoomda açmak ister misin?";
+							
+							  var r = confirm(txt);
+					  
+								if (r == true) {
+							  
+								  window.location = result.url + "?tk=" + result.token;
+								
+								} else {
+								  //window.location="https://ders.eba.gov.tr/ders/";
+							  
+								}
+						  }
+              
+            
+          
+        },error: function(XMLHttpRequest, textStatus, errorThrown) {
+           alert("Bilgiler alınamadı. Sayfayı yenileyip deneyebilirsiniz");
+        }
+      });
+		  }else alert("ID bilgileri alınamadı. Sayfayı yenileyip tekrar deneyebilirsiniz....");
+
       }else 
       {
         $("#ekle").hide();
@@ -249,6 +300,15 @@ function goFrame() {
     });
   }
 });
+}
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+    results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 $(document).on('click', '.mybtn', function(){
   $(this).after('<div class="loader"></div>')
