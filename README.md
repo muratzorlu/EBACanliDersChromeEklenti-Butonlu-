@@ -13,3 +13,4 @@ Diğer eklentiden farkı:
 - MiddleWare sayfası açılırsa buradan da Zoom açabilme.
 - Tek ekran gelirse oradan canlı derse gitme.
 - Öğretmen kullanıcları içinde açabilme.
+(Bu konuda https://github.com/sh4dowb/eba-canli-ders-crossplatform bağlantıdan faydalanıldı. Çağrı'ya çok teşekkürler.)
