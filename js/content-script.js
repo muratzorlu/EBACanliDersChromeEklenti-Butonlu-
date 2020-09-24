@@ -235,6 +235,7 @@ function git(id) {
     dataType : "json",
     success : function(resp2) {
       console.log(resp2);
+	  $("div").remove(".loader");
       if(resp2.success==true)
       {
         window.location = resp2.meeting.url + "?"+$token +"=" + resp2.meeting.token;
@@ -308,6 +309,7 @@ function goFrame() {
       },
       dataType : "json",
       success : function(resp2) {
+		  
 		  console.log(resp2);
         if(resp2.success==true)
       {
