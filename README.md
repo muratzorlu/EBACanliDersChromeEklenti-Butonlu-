@@ -11,3 +11,5 @@ Diğer eklentiden farkı:
 
 - EBA/Canlı Dersler sayfasında gelecek dersler için buton ekler ve butona tıklayıp derse gidebilme.
 - MiddleWare sayfası açılırsa buradan da Zoom açabilme.
+- Tek ekran gelirse oradan canlı derse gitme.
+- Öğretmen kullanıcları içinde açabilme.
