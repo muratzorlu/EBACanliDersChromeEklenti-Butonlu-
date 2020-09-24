@@ -5,6 +5,7 @@ var $buton=0;
 var $kim=0;
 $("body").append($btn);
 $("#ekle").hide();
+var $token="tk";
 
 
 
@@ -44,12 +45,14 @@ chrome.extension.onMessage.addListener(function(msg, sender, sendResponse) {
 						  if($kim==1)
 							{
 								$url="https://uygulama-ebaders.eba.gov.tr/ders/FrontEndService//studytime/getteacherstudytime";
-								$data="status=1&type=2&pageNumber=1&pageSize=25";
+                $data="status=1&type=2&pageNumber=1&pageSize=25";
+                $tokentype="zak";
 								$buton=1;
 							} else if($kim==2)
 							{
 								$url="https://uygulama-ebaders.eba.gov.tr/ders/FrontEndService//studytime/getstudentstudytime";
-								$data="status=1&type=2&pagesize=25&pagenumber=0";
+                $data="status=1&type=2&pagesize=25&pagenumber=0";
+                $token="tk";
 								$buton=1;
 							}
 					if ($kim>0)
@@ -78,7 +81,7 @@ chrome.extension.onMessage.addListener(function(msg, sender, sendResponse) {
                   var dersler = [];
                   var dersText = "";
                   var id = 1;
-                var zaman=1000*60*60*5;//2 saat içindeki dersler 
+                var zaman=1000*60*60*1;//5 saat içindeki dersler 
                 console.log(result);
                   for (var i in result) {
                     if ((new Date).getTime() + zaman > result[i].startdate) {
@@ -91,7 +94,7 @@ chrome.extension.onMessage.addListener(function(msg, sender, sendResponse) {
                     }
                   }
                   if (dersler.length == 0) {
-                    $("#dersler").append('<span style="color:#fff"> Aktif canlı ders yok !!!</span>');
+                    $("#dersler").append('<span style="color:#fff"> Yakın Aktif canlı ders yok !!!</span>');
 
                     return;
                   } 
@@ -133,10 +136,7 @@ chrome.extension.onMessage.addListener(function(msg, sender, sendResponse) {
               //window.location="https://ders.eba.gov.tr/ders/";
           
             }
-          
-              
-            
-          
+  
         },error: function(XMLHttpRequest, textStatus, errorThrown) {
            alert("Bilgiler alınamadı. EBA'ya devam edip Canlı Dersler Bölümünden canlı derse katılabilirsin.");
         }
@@ -159,7 +159,8 @@ chrome.extension.onMessage.addListener(function(msg, sender, sendResponse) {
               },
               data : {
 				  "studytimeid" : id,
-				  "tokentype" : "asdasd"
+          "tokentype" : $token,
+          "platform": ""
 				},
               withCredentials : true,
               crossDomain : true,
@@ -171,20 +172,28 @@ chrome.extension.onMessage.addListener(function(msg, sender, sendResponse) {
 				  console.log(resp);
 				  if(resp.success==true) 
 						  {
+							  var result = resp.meeting;
+							  if((new Date).getTime()+(1000*60*60*1)/60*30>result.startDate)
                 
-									var result = resp.meeting;
-									var txt=result.topic +" Canlı Dersini Zoomda açmak ister misin?";
-							
-							  var r = confirm(txt);
-					  
-								if (r == true) {
-							  
-								  window.location = result.url + "?tk=" + result.token;
-								
-								} else {
-								  //window.location="https://ders.eba.gov.tr/ders/";
-							  
-								}
+				        {
+                      var txt=result.topic +" Canlı Dersini Zoomda açmak ister misin?";
+                  
+                    var r = confirm(txt);
+                
+                    if (r == true) {
+                      if(result.owner==true)
+                      {
+                        window.location = result.url + "?zak=" + result.token;
+                        
+                      } else 
+                      {
+                        window.location = result.url + "?tk=" + result.token;
+                      }
+                    } else {
+                      //window.location="https://ders.eba.gov.tr/ders/";
+                    
+                    }
+				        }
 						  }
               
             
@@ -215,7 +224,8 @@ function git(id) {
     },
     data : {
       "studytimeid" : id,
-      "tokentype" : "asdasd"
+      "tokentype" : $token,
+      "platform": ""
     },
     withCredentials : true,
     crossDomain : true,
@@ -227,13 +237,14 @@ function git(id) {
       console.log(resp2);
       if(resp2.success==true)
       {
-        window.location = resp2.meeting.url + "?tk=" + resp2.meeting.token;
-      } else alert("Hata oluştu. Tekrar deneyin !!!");
+        window.location = resp2.meeting.url + "?"+$token +"=" + resp2.meeting.token;
+      } else alert("Bilgiler Alınamadı. Tekrar deneyin !!!");
       
     }
   });
 
 }
+
 
 function goFrame() {
 	console.log($url);
@@ -257,12 +268,12 @@ function goFrame() {
     var dersText = "";
     var id = 1;
 	var zaman=1000*60*60*5;//5 saat içindeki ders zamanlaması  
-	console.log(result);
+	
     for (var i in result) {
 		
       if ((new Date).getTime() + zaman >result[i].startdate) {
         dersler.push(result[i]);
-        dersText = dersText + (id.toString() + ") " + result[i].title + " (" + result[i].ownerName + ")\n");
+        dersText = dersText + (id.toString() + ") " + result[i].title + " (" + result[i].ownerName +" "+result[i].ownerSurname+ ")\n");
         id = id + 1;
       }
     }
@@ -286,7 +297,9 @@ function goFrame() {
       },
       data : {
         "studytimeid" : ders.id,
-        "tokentype" : "asdasd"
+        "tokentype" : $token,
+        "platform": ""
+
       },
       withCredentials : true,
       crossDomain : true,
@@ -295,7 +308,11 @@ function goFrame() {
       },
       dataType : "json",
       success : function(resp2) {
-        window.location = resp2.meeting.url + "?tk=" + resp2.meeting.token;
+		  console.log(resp2);
+        if(resp2.success==true)
+      {
+        window.location = resp2.meeting.url + "?"+$token +"=" + resp2.meeting.token;
+      } else alert("Bilgiler Alınamadı. Tekrar deneyin !!!");
       }
     });
   }
