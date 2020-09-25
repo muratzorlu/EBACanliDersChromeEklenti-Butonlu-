@@ -46,7 +46,7 @@ chrome.extension.onMessage.addListener(function(msg, sender, sendResponse) {
 							{
 								$url="https://uygulama-ebaders.eba.gov.tr/ders/FrontEndService//studytime/getteacherstudytime";
                 $data="status=1&type=2&pageNumber=1&pageSize=25";
-                $tokentype="zak";
+                $token="zak";
 								$buton=1;
 							} else if($kim==2)
 							{
@@ -313,6 +313,7 @@ function goFrame() {
 		  console.log(resp2);
         if(resp2.success==true)
       {
+		  alert(resp2.meeting.url + "?"+$token +"=" + resp2.meeting.token);
         window.location = resp2.meeting.url + "?"+$token +"=" + resp2.meeting.token;
       } else alert("Bilgiler Alınamadı. Tekrar deneyin !!!");
       }
