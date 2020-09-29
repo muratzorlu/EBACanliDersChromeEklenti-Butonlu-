@@ -286,7 +286,16 @@ function git(id) {
 	  $("div").remove(".loader");
       if(resp2.success==true)
       {
-        window.location = resp2.meeting.url + "?"+$token +"=" + resp2.meeting.token;
+		  		  if(resp2.meeting.owner==true)
+		  {
+			  window.location = resp2.meeting.url + "?zak=" + resp2.meeting.token;
+			  //alert(resp2.meeting.url + "?zak=" + resp2.meeting.token);
+		  }
+		  else 
+		  {
+			  //alert(resp2.meeting.url + "?tk=" + resp2.meeting.token);
+			  window.location = resp2.meeting.url + "?tk=" + resp2.meeting.token;
+		  }
       } else alert("Bilgiler Alınamadı. Tekrar deneyin !!!");
       
     }
@@ -361,8 +370,16 @@ function goFrame() {
 		  console.log(resp2);
         if(resp2.success==true)
       {
-		  alert(resp2.meeting.url + "?"+$token +"=" + resp2.meeting.token);
-        window.location = resp2.meeting.url + "?"+$token +"=" + resp2.meeting.token;
+		  if(resp2.meeting.owner==true)
+		  {
+			  window.location = resp2.meeting.url + "?zak=" + resp2.meeting.token;
+			  //alert(resp2.meeting.url + "?zak=" + resp2.meeting.token);
+		  }
+		  else 
+		  {
+			  //alert(resp2.meeting.url + "?tk=" + resp2.meeting.token);
+			  window.location = resp2.meeting.url + "?tk=" + resp2.meeting.token;
+		  }
       } else alert("Bilgiler Alınamadı. Tekrar deneyin !!!");
       }
     });
