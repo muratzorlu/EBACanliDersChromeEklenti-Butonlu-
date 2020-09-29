@@ -106,6 +106,8 @@ chrome.extension.onMessage.addListener(function(msg, sender, sendResponse) {
 
       } else if(value.substring(0,14)=="liveMiddleware") 
       {        
+  
+  //https://uygulama-ebaders.eba.gov.tr/ders/FrontEndService/livelesson/inpage/instudytime/start?studytimeid=f6bb9568da870808e97379558d28ea0c&tokentype=asd
         
              $.ajax({
               url : "https://ders.eba.gov.tr/ders/getlivelessoninfo",
@@ -130,7 +132,10 @@ chrome.extension.onMessage.addListener(function(msg, sender, sendResponse) {
   
             if (r == true) {
           
-              window.location = result.meetingStartUrl;
+             
+				  gitlive(result.studyTimeId);
+			  
+			  
             
             } else {
               //window.location="https://ders.eba.gov.tr/ders/";
@@ -212,6 +217,49 @@ chrome.extension.onMessage.addListener(function(msg, sender, sendResponse) {
 	});
 	}
 });
+
+function gitlive(id) {
+  
+  $.ajax({
+    url : "https://uygulama-ebaders.eba.gov.tr/ders/FrontEndService/livelesson/inpage/instudytime/start",
+    method : "POST",
+    headers : {
+      "Content-Type" : "application/x-www-form-urlencoded",
+      "Accept" : "json"
+    },
+    data : {
+      "studytimeid" : id,
+      "tokentype" : $token,
+      "platform": ""
+    },
+    withCredentials : true,
+    crossDomain : true,
+    xhrFields : {
+      withCredentials : true
+    },
+    dataType : "json",
+    success : function(resp2) {
+      console.log(resp2);
+	  $("div").remove(".loader");
+      if(resp2.success==true)
+      {
+		  if(resp2.meeting.owner==true)
+		  {
+			  window.location = resp2.meeting.url + "?zak=" + resp2.meeting.token;
+			  //alert(resp2.meeting.url + "?zak=" + resp2.meeting.token);
+		  }
+		  else 
+		  {
+			  //alert(resp2.meeting.url + "?tk=" + resp2.meeting.token);
+			  window.location = resp2.meeting.url + "?tk=" + resp2.meeting.token;
+		  }
+        
+      } else alert("Bilgiler Alınamadı. Tekrar deneyin !!!");
+      
+    }
+  });
+
+}
 
 function git(id) {
   
