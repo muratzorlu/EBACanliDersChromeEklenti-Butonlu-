@@ -38,68 +38,61 @@ chrome.extension.onMessage.addListener(function(msg, sender, sendResponse) {
 						  if(resp.success==true) 
 						  {
 							  $kim=1;
+							  $url="https://uygulama-ebaders.eba.gov.tr/ders/FrontEndService//studytime/getteacherstudytime";
+                $data="status=1&type=2&pageNumber=1&pageSize=25";
+                $token="zak";
 						  } else if(resp.success==false) 
 						  {
 							$kim=2;
-						  }
-						  if($kim==1)
-							{
-								$url="https://uygulama-ebaders.eba.gov.tr/ders/FrontEndService//studytime/getteacherstudytime";
-                $data="status=1&type=2&pageNumber=1&pageSize=25";
-                $token="zak";
-								$buton=1;
-							} else if($kim==2)
-							{
-								$url="https://uygulama-ebaders.eba.gov.tr/ders/FrontEndService//studytime/getstudentstudytime";
+							$url="https://uygulama-ebaders.eba.gov.tr/ders/FrontEndService//studytime/getstudentstudytime";
                 $data="status=1&type=2&pagesize=25&pagenumber=0";
                 $token="tk";
-								$buton=1;
-							}
+						  }
+
 					if ($kim>0)
 						{
+							$("#ekle").show();
+							$("#dersler").show();
+					  
 
-                $("#ekle").show();
-                $("#dersler").show();
-          
+						   $.ajax({
+							url : $url,
+							method : "POST",
+							headers : {
+							  "Content-Type" : "application/x-www-form-urlencoded",
+							  "Accept" : "json"
+							},
+							data : $data,
+							withCredentials : true,
+							crossDomain : true,
+							xhrFields : {
+							  withCredentials : true
+							},
+							dataType : "json",
+							success : function(resp) {
+							  var result = resp.studyTimeList;
+							  var dersler = [];
+							  var dersText = "";
+							  var id = 1;
+							var zaman=1000*60*60*1;//5 saat içindeki dersler 
+							console.log(result);
+							  for (var i in result) {
+								if ((new Date).getTime() + zaman > result[i].startdate) {
+								  dersler.push(result[i]);
+								  dersText = dersText + (id.toString() + ") " + result[i].title + " (" + result[i].ownerName + ")\n");
+								  
+								  $("#dersler").append('<div><button type="button" class="mybtn" style="margin-top:2px;display: block;" value="" id="'+result[i].id+'">'+ result[i].title + ' (' + result[i].ownerName+' '+result[i].ownerSurname+ ') </button></div>');
+								  
+								  id = id + 1;
+								}
+							  }
+							  if (dersler.length == 0) {
+								$("#dersler").append('<span style="color:#fff"> Yakın Aktif canlı ders yok !!!</span>');
 
-               $.ajax({
-                url : $url,
-                method : "POST",
-                headers : {
-                  "Content-Type" : "application/x-www-form-urlencoded",
-                  "Accept" : "json"
-                },
-                data : $data,
-                withCredentials : true,
-                crossDomain : true,
-                xhrFields : {
-                  withCredentials : true
-                },
-                dataType : "json",
-                success : function(resp) {
-                  var result = resp.studyTimeList;
-                  var dersler = [];
-                  var dersText = "";
-                  var id = 1;
-                var zaman=1000*60*60*1;//5 saat içindeki dersler 
-                console.log(result);
-                  for (var i in result) {
-                    if ((new Date).getTime() + zaman > result[i].startdate) {
-                      dersler.push(result[i]);
-                      dersText = dersText + (id.toString() + ") " + result[i].title + " (" + result[i].ownerName + ")\n");
-                      
-                      $("#dersler").append('<div><button type="button" class="mybtn" style="margin-top:2px;display: block;" value="" id="'+result[i].id+'">'+ result[i].title + ' (' + result[i].ownerName+' '+result[i].ownerSurname+ ') </button></div>');
-                      
-                      id = id + 1;
-                    }
-                  }
-                  if (dersler.length == 0) {
-                    $("#dersler").append('<span style="color:#fff"> Yakın Aktif canlı ders yok !!!</span>');
-
-                    return;
-                  } 
-                }
-              });
+								return;
+							  } 
+							}
+						  });
 						}
 					}
 				});
@@ -245,11 +238,13 @@ function gitlive(id) {
       {
 		  if(resp2.meeting.owner==true)
 		  {
+			  
 			  window.location = resp2.meeting.url + "?zak=" + resp2.meeting.token;
 			  //alert(resp2.meeting.url + "?zak=" + resp2.meeting.token);
 		  }
 		  else 
 		  {
+			  alert(resp2.meeting.url + "?tk=" + resp2.meeting.token);
 			  //alert(resp2.meeting.url + "?tk=" + resp2.meeting.token);
 			  window.location = resp2.meeting.url + "?tk=" + resp2.meeting.token;
 		  }
