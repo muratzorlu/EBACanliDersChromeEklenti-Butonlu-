@@ -74,7 +74,7 @@ chrome.extension.onMessage.addListener(function(msg, sender, sendResponse) {
 							  var dersler = [];
 							  var dersText = "";
 							  var id = 1;
-							var zaman=1000*60*60*1;//5 saat içindeki dersler 
+							var zaman=(1000*60)*10;//10 dakika içindeki dersler 
 							console.log(result);
 							  for (var i in result) {
 								if ((new Date).getTime() + zaman > result[i].startdate) {
@@ -99,8 +99,6 @@ chrome.extension.onMessage.addListener(function(msg, sender, sendResponse) {
 
       } else if(value.substring(0,14)=="liveMiddleware") 
       {        
-  
-  //https://uygulama-ebaders.eba.gov.tr/ders/FrontEndService/livelesson/inpage/instudytime/start?studytimeid=f6bb9568da870808e97379558d28ea0c&tokentype=asd
         
              $.ajax({
               url : "https://ders.eba.gov.tr/ders/getlivelessoninfo",
@@ -171,7 +169,7 @@ chrome.extension.onMessage.addListener(function(msg, sender, sendResponse) {
 				  if(resp.success==true) 
 						  {
 							  var result = resp.meeting;
-							  if((new Date).getTime()+(1000*60*60*1)/60*30>result.startDate)
+							  if((new Date).getTime()+(1000*60)*10>result.startDate)
                 
 				        {
                       var txt=result.topic +" Canlı Dersini Zoomda açmak ister misin?";
@@ -185,6 +183,7 @@ chrome.extension.onMessage.addListener(function(msg, sender, sendResponse) {
                         
                       } else 
                       {
+						  //alert(result.url + "?tk=" + result.token);
                         window.location = result.url + "?tk=" + result.token;
                       }
                     } else {
@@ -238,13 +237,12 @@ function gitlive(id) {
       {
 		  if(resp2.meeting.owner==true)
 		  {
-			  
-			  window.location = resp2.meeting.url + "?zak=" + resp2.meeting.token;
 			  //alert(resp2.meeting.url + "?zak=" + resp2.meeting.token);
+			  window.location = resp2.meeting.url + "?zak=" + resp2.meeting.token;
+			  
 		  }
 		  else 
 		  {
-			  alert(resp2.meeting.url + "?tk=" + resp2.meeting.token);
 			  //alert(resp2.meeting.url + "?tk=" + resp2.meeting.token);
 			  window.location = resp2.meeting.url + "?tk=" + resp2.meeting.token;
 		  }
@@ -257,7 +255,6 @@ function gitlive(id) {
 }
 
 function git(id) {
-  
   $.ajax({
     url : "https://uygulama-ebaders.eba.gov.tr/ders/FrontEndService//livelesson/instudytime/start",
     method : "POST",
@@ -283,8 +280,9 @@ function git(id) {
       {
 		  		  if(resp2.meeting.owner==true)
 		  {
-			  window.location = resp2.meeting.url + "?zak=" + resp2.meeting.token;
 			  //alert(resp2.meeting.url + "?zak=" + resp2.meeting.token);
+			  window.location = resp2.meeting.url + "?zak=" + resp2.meeting.token;
+			  
 		  }
 		  else 
 		  {
@@ -367,8 +365,9 @@ function goFrame() {
       {
 		  if(resp2.meeting.owner==true)
 		  {
-			  window.location = resp2.meeting.url + "?zak=" + resp2.meeting.token;
 			  //alert(resp2.meeting.url + "?zak=" + resp2.meeting.token);
+			  window.location = resp2.meeting.url + "?zak=" + resp2.meeting.token;
+			  
 		  }
 		  else 
 		  {
